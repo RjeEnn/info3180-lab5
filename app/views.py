@@ -37,15 +37,15 @@ def login():
 
         username = form.username.data
         password = form.password.data
-        currentUser = UserProfile.query.filter_by(username=username)
+        current_user = UserProfile.query.filter_by(username=username)
 
-        if user is not None and check_password_hash(currentUser.password, password):
-            login_user(currentUser)
+        if current_user is not None and check_password_hash(current_user.password, password):
+            login_user(current_user)
             flash('Successfully logged in', 'success')
             return redirect(url_for("secure_page"))
         else:
             flash('Username/Password incorrect', 'danger')
-            
+
     return render_template("login.html", form=form)
 
 
