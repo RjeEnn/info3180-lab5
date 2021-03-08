@@ -33,14 +33,13 @@ def about():
 def login():
     form = LoginForm()
     if request.method == "POST" and form.validate_on_submit():
-        form = LoginForm
 
         username = form.username.data
         password = form.password.data
-        current_user = UserProfile.query.filter_by(username=username)
+        user = UserProfile.query.filter_by(username=username).first()
 
-        if current_user is not None and check_password_hash(current_user.password, password):
-            login_user(current_user)
+        if user is not None and check_password_hash(user.password, password):
+            login_user(user)
             flash('Successfully logged in', 'success')
             return redirect(url_for("secure_page"))
         else:
@@ -52,6 +51,14 @@ def login():
 @login_required
 def secure_page():
     return render_template('secure_page.html')
+
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    flash('Logged out successfully', 'success')
+    return redirect(url_for('home'))
 
 # user_loader callback. This callback is used to reload the user object from
 # the user ID stored in the session
